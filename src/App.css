@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Slussen';
+    src: url('/fonts/Slussen-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SlussenExtended';
+    src: url('/fonts/Slussen-ExtendedSemibold.woff2') format('woff2'),
+        url('/fonts/Slussen-ExtendedSemibold.woff') format('woff'),
+        url('/fonts/Slussen-ExtendedSemibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SlussenExpanded';
+    src: url('/fonts/Slussen-Expanded.woff2') format('woff2'),
+        url('/fonts/Slussen-Expanded.woff') format('woff'),
+        url('/fonts/Slussen-ExpandedMedium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
