@@ -1,15 +1,123 @@
-import React, { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useStarknetkitConnectModal } from "starknetkit";
-import { useConnect } from "@starknet-react/core";
+import { useAccount, useConnect, useReadContract, useContract, useNetwork, useSendTransaction, useTransactionReceipt, useBalance } from "@starknet-react/core";
+import { contractAbi } from '../../contracts/ERC20'
+import { getBalance, getTokenInfo } from "../../services/getBalance";
+import TopAssetPopup from "../../Components/TopAssetPopup";
+import BottomAssetTopup from "../../Components/BottomAssetTopup";
+
 const App_Home = () => {
+  const [open, setOpen] = useState(false)
+  const [openBottom, setOpenBottom] = useState(false)
+  const [topAsset, setTopAsset] = useState(false)
+  const [bottomAsset, setBottomAsset] = useState(false)
+  const [isSwap, setIsSwap] = useState(false)
   const { connect, connectors } = useConnect();
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
     connectors: connectors,
   });
+  const [walletAssets, setWalletAssets] = useState([])
+  const [selectedAsset, setSelectedAsset] = useState(null)
+
+  const [totalAssets, setTotalAssets] = useState(0)
+  const { address, account } = useAccount();
   const connectWallet = async () => {
     const { connector } = await starknetkitConnectModal();
     await connect({ connector });
   };
+
+  const starknetContractAddress = '0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d'
+  const [inputValue, setInputValue] = useState(0)
+
+  const { chain } = useNetwork();
+  const { contract } = useContract({
+    abi: contractAbi,
+    address: topAsset.contractAddress ? topAsset.contractAddress : topAsset.l2_token_address,
+  });
+
+  const { data: balance, error } = useReadContract({
+    abi: contractAbi,
+    address: chain.nativeCurrency.address,
+    args: [],
+  });
+
+  const safeAmount = inputValue * 10 ** 18 || 0
+  const recipientAddress = "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+  const calls = useMemo(() => {
+    return contract && address ? [contract.populate("transfer", [recipientAddress, safeAmount])] : undefined
+  }, [contract, address, inputValue, safeAmount])
+
+  const { send: writeAsync, data: writeData, isPending: writeIsPending } = useSendTransaction({
+    calls
+  });
+
+
+  const { data: waitData, status: waitStatus, isLoading: waitIsLoading } = useTransactionReceipt({
+    hash: writeData?.transaction_hash,
+    watch: true,
+  })
+  const { address: userAddress } = useAccount();
+  const { isLoading: balanceIsLoading, isError: balanceIsError, error: balanceError, data: balanceData } = useBalance({
+    address: userAddress,
+    watch: true
+  });
+  const { data: readData, refetch: dataRefetch, isError: readIsError, isLoading: readIsLoading, error: readError } = useReadContract({
+    functionName: "balance_of",
+    args: [userAddress],
+    abi: contractAbi,
+    address: topAsset.contractAddress ? topAsset.contractAddress : topAsset.l2_token_address,
+    watch: true,
+
+  });
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const res = await getBalance(userAddress);
+      console.log(res);
+      setWalletAssets(res.data);
+    };
+
+    if (userAddress) {
+      fetchBalance();
+    }
+  }, [userAddress]);
+
+
+  useEffect(() => {
+    getTokenInfo().then(res => {
+      console.log(res)
+      setTotalAssets(res.data)
+    })
+  }, [userAddress])
+  console.log(balanceData, readData, readError)
+  const handleSubmit = () => {
+    try {
+      writeAsync();
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    }
+  }
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value === '' ? '' : Number(value));
+  }
+
+  const checkAsset = () => {
+    if (topAsset) {
+      const asset = walletAssets.find(asset => asset.symbol === topAsset.symbol)
+      console.log('Asset Found', asset)
+      if (asset) {
+        setIsSwap(true)
+      } else {
+        setIsSwap(false)
+      }
+    }
+  }
+
+  console.log('isSwap', isSwap)
+
+  useEffect(() => {
+    checkAsset()
+  }, [topAsset])
   return (
     <div className="w-full h-full ">
       <div className="chakra-container font-slussen css-o4ipt">
@@ -217,40 +325,66 @@ const App_Home = () => {
               <div className="css-9eizb5">
                 <div className="css-1ohwri0">
                   <input
+                    onChange={handleChange}
                     type="number"
                     inputMode="decimal"
                     step="0.1"
                     min="0"
                     placeholder="0"
                     className="chakra-input css-rvbhi6"
-                    value="1"
+                    value={inputValue}
                   />
                 </div>
                 <div className="css-3y82xo">
-                  <button type="button" className="chakra-button css-1e6r2y5">
-                    <div className="css-1k9efnl">
-                      <img
-                        src="https://imagedelivery.net/0xPAQaDtnQhBs8IzYRIlNg/e07829b7-0382-4e03-7ecd-a478c5aa9f00/logo"
-                        className="chakra-image css-lq8flc"
-                        style={{
-                          border: "2px solid rgb(255, 255, 255)",
-                          overflow: "hidden",
-                          borderRadius: "50%",
-                        }}
-                      />
-                      <div className="css-0">ETH</div>
-                      <svg
-                        viewBox="0 0 24 24"
-                        focusable="false"
-                        className="chakra-icon css-onkibi"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
-                        ></path>
-                      </svg>
-                    </div>
-                  </button>
+                  {topAsset ?
+                    <button onClick={() => setOpen(true)} type="button" className="chakra-button css-1e6r2y5">
+                      <div className="css-1k9efnl">
+                        <img
+                          src={topAsset.logo_url ? topAsset.logo_url : topAsset.imgUrl}
+                          className="chakra-image css-lq8flc"
+                          style={{
+                            border: "2px solid rgb(255, 255, 255)",
+                            overflow: "hidden",
+                            borderRadius: "50%",
+                          }}
+                        />
+                        <div className="css-0">{topAsset.symbol}</div>
+                        <svg
+                          viewBox="0 0 24 24"
+                          focusable="false"
+                          className="chakra-icon css-onkibi"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                          ></path>
+                        </svg>
+                      </div>
+                    </button> :
+                    <button onClick={() => setOpen(true)} type="button" className="chakra-button css-1e6r2y5">
+                      <div className="css-1k9efnl">
+                        <img
+                          src="https://imagedelivery.net/0xPAQaDtnQhBs8IzYRIlNg/e07829b7-0382-4e03-7ecd-a478c5aa9f00/logo"
+                          className="chakra-image css-lq8flc"
+                          style={{
+                            border: "2px solid rgb(255, 255, 255)",
+                            overflow: "hidden",
+                            borderRadius: "50%",
+                          }}
+                        />
+                        <div className="css-0">ETH</div>
+                        <svg
+                          viewBox="0 0 24 24"
+                          focusable="false"
+                          className="chakra-icon css-onkibi"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                          ></path>
+                        </svg>
+                      </div>
+                    </button>}
                 </div>
               </div>
               <div className="css-vl80cq">
@@ -293,30 +427,55 @@ const App_Home = () => {
                   />
                 </div>
                 <div className="css-3y82xo">
-                  <button type="button" className="chakra-button css-1e6r2y5">
-                    <div className="css-1k9efnl">
-                      <img
-                        src="https://imagedelivery.net/0xPAQaDtnQhBs8IzYRIlNg/e5aaa970-a998-47e8-bd43-4a3b56b87200/logo"
-                        className="chakra-image css-lq8flc"
-                        style={{
-                          border: "2px solid rgb(255, 255, 255)",
-                          overflow: "hidden",
-                          borderRadius: "50%",
-                        }}
-                      />
-                      <div className="css-0">USDC</div>
-                      <svg
-                        viewBox="0 0 24 24"
-                        focusable="false"
-                        className="chakra-icon css-onkibi"
-                      >
-                        <path
-                          fill="currentColor"
-                          d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
-                        ></path>
-                      </svg>
-                    </div>
-                  </button>
+                  {bottomAsset ?
+                    <button onClick={() => setOpenBottom(true)} type="button" className="chakra-button css-1e6r2y5">
+                      <div className="css-1k9efnl">
+                        <img
+                          src={bottomAsset.logo_url ? bottomAsset.logo_url : bottomAsset.imgUrl}
+                          className="chakra-image css-lq8flc"
+                          style={{
+                            border: "2px solid rgb(255, 255, 255)",
+                            overflow: "hidden",
+                            borderRadius: "50%",
+                          }}
+                        />
+                        <div className="css-0">{bottomAsset.symbol}</div>
+                        <svg
+                          viewBox="0 0 24 24"
+                          focusable="false"
+                          className="chakra-icon css-onkibi"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                          ></path>
+                        </svg>
+                      </div>
+                    </button> :
+                    <button onClick={() => setOpenBottom(true)} type="button" className="chakra-button css-1e6r2y5">
+                      <div className="css-1k9efnl">
+                        <img
+                          src="https://imagedelivery.net/0xPAQaDtnQhBs8IzYRIlNg/e5aaa970-a998-47e8-bd43-4a3b56b87200/logo"
+                          className="chakra-image css-lq8flc"
+                          style={{
+                            border: "2px solid rgb(255, 255, 255)",
+                            overflow: "hidden",
+                            borderRadius: "50%",
+                          }}
+                        />
+                        <div className="css-0">USDC</div>
+                        <svg
+                          viewBox="0 0 24 24"
+                          focusable="false"
+                          className="chakra-icon css-onkibi"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"
+                          ></path>
+                        </svg>
+                      </div>
+                    </button>}
                 </div>
               </div>
               <div className="css-1fw1gf0 font-slussen">
@@ -398,25 +557,46 @@ const App_Home = () => {
               </div>
             </div>
           </div>
-          <div className="css-1ayfwcb">
-            <button
-              onClick={() => {
-                connectWallet();
-              }}
+          <div className=" mt-4 css-1ayfwcb">
+            {!address ? (
+              <button
+                onClick={() => {
+                  connectWallet();
+                }}
+                type="button"
+                className="chakra-button css-12bjnzv"
+              >
+                <div className="css-1lads1q">
+                  <div className="css-15axsv5">
+                    <p className="chakra-text   css-1eoz3uu font-slussen">
+                      Connect wallet
+                    </p>
+                  </div>
+                </div>
+              </button>
+            ) : <button
+
               type="button"
               className="chakra-button css-12bjnzv"
             >
-              <div className="css-1lads1q">
+              <button
+                disabled={!isSwap}
+                onClick={() => {
+                  handleSubmit()
+                }}
+                className="css-1lads1q">
                 <div className="css-15axsv5">
                   <p className="chakra-text   css-1eoz3uu font-slussen">
-                    Connect wallet
+                    {isSwap ? "Swap" : `${topAsset.symbol} balance is not sufficient`}
                   </p>
                 </div>
-              </div>
-            </button>
+              </button>
+            </button>}
           </div>
         </div>
       </div>
+      {open && <TopAssetPopup open={open} setOpen={setOpen} walletAssets={walletAssets} totalAssets={totalAssets} setTopAsset={setTopAsset} />}
+      {openBottom && <BottomAssetTopup openBottom={openBottom} setOpenBottom={setOpenBottom} walletAssets={walletAssets} totalAssets={totalAssets} setBottomAsset={setBottomAsset} />}
     </div>
   );
 };

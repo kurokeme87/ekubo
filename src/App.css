@@ -25,3 +25,318 @@
     font-style: normal;
     font-display: swap;
 }
+
+.css-wl0d9u {
+    display: flex;
+    width: 100vw;
+    height: var(--chakra-vh);
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: var(--chakra-zIndices-modal);
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    overflow: auto;
+    overscroll-behavior-y: none;
+}
+
+.css-1b7hcx8 {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    border-radius: 16px;
+    color: inherit;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-inline: auto;
+    z-index: var(--chakra-zIndices-modal);
+    --modal-bg: var(--chakra-colors-white);
+    --modal-shadow: var(--chakra-shadows-lg);
+    background: #fff;
+    box-shadow: var(--modal-shadow);
+
+    overflow: hidden;
+    max-height: 100%;
+}
+
+@media screen and (min-width: 30em) {
+    .css-1b7hcx8 {
+        max-width: var(--chakra-sizes-md);
+    }
+}
+
+.css-12pj8es {
+    flex: 0 1 0%;
+    padding-inline-start: var(--chakra-space-6);
+    padding-inline-end: var(--chakra-space-6);
+    padding-top: var(--chakra-space-4);
+    padding-bottom: var(--chakra-space-4);
+    font-size: var(--chakra-fontSizes-xl);
+    font-weight: 500;
+    text-wrap: balance;
+    font-family: var(--chakra-fonts-heading);
+    color: var(--chakra-colors-textDefault);
+}
+
+@media screen and (min-width: 48em) {
+    .css-tx6rgg {
+        height: 500px;
+    }
+}
+
+.css-tx6rgg {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden scroll;
+}
+
+.css-1lekzkb {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+.css-1hv8ws3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: 500;
+    text-wrap: balance;
+    color: var(--chakra-colors-textDefault);
+    font-size: var(--chakra-fontSizes-md);
+    line-height: 1.2;
+}
+
+.css-x4ryps {
+    display: inline-flex;
+    appearance: none;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    user-select: none;
+    position: relative;
+    white-space: nowrap;
+    vertical-align: middle;
+    outline: transparent solid 2px;
+    outline-offset: 2px;
+    line-height: 1.2;
+    border-radius: 0.5rem;
+    font-weight: var(--chakra-fontWeights-semibold);
+    transition-property: var(--chakra-transition-property-common);
+    transition-duration: var(--chakra-transition-duration-normal);
+    height: var(--chakra-sizes-6);
+    min-width: var(--chakra-sizes-6);
+    font-size: var(--chakra-fontSizes-xs);
+    padding-inline-start: var(--chakra-space-2);
+    padding-inline-end: var(--chakra-space-2);
+    color: var(--chakra-colors-gray-800);
+}
+
+.css-onkibi {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    line-height: 1em;
+    flex-shrink: 0;
+    color: currentcolor;
+    vertical-align: middle;
+}
+
+.css-hq04l9 {
+    width: 100%;
+    display: flex;
+    position: relative;
+    isolation: isolate;
+    border-radius: 5px;
+    border-color: var(--chakra-colors-transparent);
+    background: var(--chakra-colors-backgroundCard);
+    margin-top: var(--chakra-space-4);
+}
+
+.css-9murld {
+    left: 0px;
+    width: var(--chakra-sizes-12);
+    height: var(--chakra-sizes-12);
+    font-size: var(--chakra-fontSizes-lg);
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.css-1b915tz {
+    width: 100%;
+    min-width: 0px;
+    outline: transparent solid 2px;
+    outline-offset: 2px;
+    position: relative;
+    appearance: none;
+    transition-property: var(--chakra-transition-property-common);
+    transition-duration: var(--chakra-transition-duration-normal);
+    font-size: var(--chakra-fontSizes-lg);
+    padding-inline-start: var(--chakra-space-12);
+    padding-inline-end: var(--chakra-space-4);
+    height: var(--chakra-sizes-12);
+    border-radius: var(--chakra-radii-md);
+    border-width: 1px;
+    border-style: solid;
+    border-image: initial;
+    border-color: inherit;
+    background: inherit;
+    color: var(--chakra-colors-text);
+}
+
+.css-zgjiqu {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    line-height: 1em;
+    flex-shrink: 0;
+    color: var(--chakra-colors-gray-300);
+    vertical-align: middle;
+}
+
+.css-j7qwjs {
+    display: flex;
+    flex-direction: column;
+}
+
+.css-67471v {
+    font-family: var(--chakra-fonts-medium);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--chakra-colors-textMuted);
+    font-weight: 500;
+    padding-inline-start: var(--chakra-space-6);
+    padding-inline-end: var(--chakra-space-6);
+    padding-top: var(--chakra-space-2);
+    padding-bottom: var(--chakra-space-2);
+}
+
+.css-gt9bbm {
+    display: flex;
+    gap: var(--chakra-space-3);
+    padding-inline-start: var(--chakra-space-6);
+    padding-inline-end: var(--chakra-space-6);
+    padding-top: var(--chakra-space-2);
+    padding-bottom: var(--chakra-space-2);
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.css-gt9bbm {
+    display: flex;
+    gap: var(--chakra-space-3);
+    padding-inline-start: var(--chakra-space-6);
+    padding-inline-end: var(--chakra-space-6);
+    padding-top: var(--chakra-space-2);
+    padding-bottom: var(--chakra-space-2);
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.css-1c8x5n5 {
+    height: var(--chakra-sizes-9);
+    width: var(--chakra-sizes-9);
+    border-radius: 100%;
+    background: rgb(255, 255, 255);
+    flex-shrink: 0;
+}
+
+.css-1rr4qq7 {
+    flex: 1 1 0%;
+}
+
+.css-1ikjozn {
+    font-family: var(--chakra-fonts-medium);
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.css-10971m {
+    font-family: var(--chakra-fonts-medium);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--chakra-colors-textMuted);
+    font-weight: 500;
+}
+
+.css-bjouui {
+    line-height: 1em;
+    color: currentcolor;
+    vertical-align: middle;
+    display: block;
+    height: var(--chakra-sizes-9);
+    width: var(--chakra-sizes-9);
+    flex-shrink: 0;
+}
+
+.css-1be2m5k {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100vw;
+    height: 100vh;
+    background: var(--chakra-colors-blackAlpha-600);
+    z-index: var(--chakra-zIndices-modal);
+    backdrop-filter: var(--chakra-backdrop-blur) var(--chakra-backdrop-brightness) var(--chakra-backdrop-contrast) var(--chakra-backdrop-grayscale) var(--chakra-backdrop-hue-rotate) var(--chakra-backdrop-invert) var(--chakra-backdrop-opacity) var(--chakra-backdrop-saturate) var(--chakra-backdrop-sepia);
+    --chakra-backdrop-blur: blur(6px);
+    --chakra-backdrop-brightness: var(--chakra-empty,
+            /*!*/
+            /*!*/
+        );
+    --chakra-backdrop-contrast: var(--chakra-empty,
+            /*!*/
+            /*!*/
+        );
+    --chakra-backdrop-grayscale: var(--chakra-empty,
+            /*!*/
+            /*!*/
+        );
+    --chakra-backdrop-hue-rotate: var(--chakra-empty,
+            /*!*/
+            /*!*/
+        );
+    --chakra-backdrop-invert: var(--chakra-empty,
+            /*!*/
+            /*!*/
+        );
+    --chakra-backdrop-opacity: var(--chakra-empty,
+            /*!*/
+            /*!*/
+        );
+    --chakra-backdrop-saturate: var(--chakra-empty,
+            /*!*/
+            /*!*/
+        );
+    --chakra-backdrop-sepia: var(--chakra-empty,
+            /*!*/
+            /*!*/
+        );
+}
+
+.css-wl0d9u {
+    display: flex;
+    width: 100vw;
+    height: var(--chakra-vh);
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: var(--chakra-zIndices-modal);
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    overflow: auto;
+    overscroll-behavior-y: none;
+}

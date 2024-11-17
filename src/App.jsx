@@ -22,6 +22,7 @@ function App() {
         <Route path='/governance' element={<Governance />} />
         <Route path='/positions' element={<Pool />} />
         <Route path='/$EKUBO' element={<Ekubo />} />
+
       </Routes>
     </div>
   )
